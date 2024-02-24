@@ -2,18 +2,13 @@
 
 namespace Ja\Shipping\Actions;
 
-use EasyPost\EasyPostClient;
+use Ja\Shipping\Services\EasyPost;
 
 class BuyPostageLabelForShipment
 {
     public static function run(string $shipmentId, string $shippingRateId): ?array
     {
-        $client = new EasyPostClient(env('EASYPOST_API_KEY'));
-
-        $result = $client->shipment->buy($shipmentId, [
-            'rate' => $client->rate->retrieve($shippingRateId),
-            'insurance' => null,
-        ]);
+        $result = (new EasyPost)->shipmentBuy($shipmentId, $shippingRateId);
 
         return $result ?? null;
     }

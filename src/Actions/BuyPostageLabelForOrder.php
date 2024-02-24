@@ -3,16 +3,17 @@
 namespace Ja\Shipping\Actions;
 
 use EasyPost\EasyPostClient;
+use Ja\Shipping\Services\EasyPost;
 
 class BuyPostageLabelForOrder
 {
     public static function run(string $orderId, string $shippingRateId): ?array
     {
-        $client = new EasyPostClient(env('EASYPOST_API_KEY'));
+        $easyPost = new EasyPost;
 
-        $shippingRate = $client->rate->retrieve($shippingRateId);
+        $shippingRate = $easyPost->rateRetrieve($shippingRateId);
 
-        $result = $client->order->buy($orderId, $shippingRate);
+        $result = $easyPost->orderBuy($orderId, $shippingRate);
 
         return $result ?? null;
     }

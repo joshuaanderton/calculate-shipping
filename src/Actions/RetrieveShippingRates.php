@@ -6,30 +6,21 @@ use EasyPost\EasyPostClient;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Ja\Shipping\Services\EasyPost;
 
-class Shipping
+class RetrieveShippingRates
 {
     public static function run(array $fromAddress, array $toAddress, array $parcels): Collection
     {
-        $client = new EasyPostClient(env('EASYPOST_API_KEY'));
-
         try {
-            if (count($parcels) === 1) {
-                $shipment = $client->shipment->create([
-                    'from_address' => $fromAddress,
-                    'to_address' => $toAddress,
-                    'parcel' => $parcels[0],
-                ]);
-            } else {
-                $shipment = $client->order->create([
-                    'from_address' => $fromAddress,
-                    'to_address' => $toAddress,
-                    'shipments' => collect($parcels)->map(fn ($parcel) => ['parcel' => $parcel])->toArray(),
-                ]);
-            }
+            $shipment = (new EasyPost)->orderOrShipmentCreate(
+                $fromAddress,
+                $toAddress,
+                $parcels
+            );
         } catch (Exception $e) {
             Log::critical(implode(PHP_EOL, [
-                "EasyPost Shipment/Order {$e->getMessage()}",
+                "Shipping Calculator Error: {$e->getMessage()}",
                 './'.explode(base_path(), __FILE__)[1].':'.__LINE__,
             ]));
         }
@@ -42,7 +33,7 @@ class Shipping
                 ->filter(fn ($message) => $message->type === 'rate_error')
                 ->each(fn ($message) => (
                     Log::critical(implode(PHP_EOL, [
-                        "EasyPost Shipment/Order ({$message->carrier}): {$message->message}",
+                        "Shipping Calculator Error: ({$message->carrier}): {$message->message}",
                         './'.explode(base_path(), __FILE__)[1].':'.__LINE__,
                     ]))
                 ));

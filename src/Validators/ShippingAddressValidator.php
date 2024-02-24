@@ -2,12 +2,12 @@
 
 namespace Ja\Shipping\Actions;
 
-use EasyPost\EasyPostClient;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Validator;
+use Ja\Shipping\Services\EasyPost;
 
-class VerifyAddress
+class ShippingAddressValidator
 {
     public static function make(array $data, ?bool $delivery = false, ?array $rules = [])
     {
@@ -63,7 +63,7 @@ class VerifyAddress
 
     public static function verify(array $address, bool $delivery = false): Collection
     {
-        $client = new EasyPostClient(env('EASYPOST_API_KEY'));
+
 
         if (array_key_exists('line1', $address)) {
             $address['street1'] = $address['line1'];
@@ -74,7 +74,7 @@ class VerifyAddress
             $address['zip'] = $address['postal_code'];
         }
 
-        $requestData = (
+        $addressData = (
             collect($address)
                 ->only([
                     'street1',
@@ -94,7 +94,7 @@ class VerifyAddress
                 ->toArray()
         );
 
-        $response = $client->address->create($requestData);
+        $response = (new EasyPost)->addressCreate($addressData);
 
         if ($delivery) {
             $verificationErrors = collect($response->verifications->delivery->errors ?? []);
