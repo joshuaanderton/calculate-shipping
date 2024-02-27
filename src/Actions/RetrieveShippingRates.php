@@ -12,18 +12,11 @@ class RetrieveShippingRates
 {
     public static function run(array $fromAddress, array $toAddress, array $parcels): Collection
     {
-        try {
-            $shipment = (new EasyPost)->orderOrShipmentCreate(
-                $fromAddress,
-                $toAddress,
-                $parcels
-            );
-        } catch (Exception $e) {
-            Log::critical(implode(PHP_EOL, [
-                "Shipping Calculator Error: {$e->getMessage()}",
-                './'.explode(base_path(), __FILE__)[1].':'.__LINE__,
-            ]));
-        }
+        $shipment = (new EasyPost)->orderOrShipmentCreate(
+            $fromAddress,
+            $toAddress,
+            $parcels
+        );
 
         $rates = collect($shipment->rates);
 

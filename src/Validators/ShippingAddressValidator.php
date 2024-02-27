@@ -1,6 +1,6 @@
 <?php
 
-namespace Ja\Shipping\Actions;
+namespace Ja\Shipping\Validators;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
