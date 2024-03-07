@@ -15,7 +15,7 @@ class ShippingAddressValidator
 
         return Validator::make($data, array_merge([
             'name' => 'required|string|max:255',
-            'phone' => 'sometimes|required|string|max:255',
+            'phone' => 'nullable|string|max:255',
             'city' => [
                 'required',
                 'string',
