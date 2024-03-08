@@ -15,7 +15,7 @@ class ShippingAddressValidator
 
         return Validator::make($data, array_merge([
             'name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:255',
+            'phone' => 'required|string|max:255', // Required for creating shipping labels with EasyPost
             'city' => [
                 'required',
                 'string',
