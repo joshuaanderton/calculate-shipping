@@ -9,9 +9,9 @@ use Ja\Shipping\Services\EasyPost;
 
 class ShippingAddressValidator
 {
-    public static function make(array $data, ?bool $delivery = false, ?array $rules = [])
+    public static function make(array $data, ?array $rules = [], bool $zip4 = false)
     {
-        $errors = self::verify($data, $delivery);
+        $errors = self::verify($data, $zip4);
 
         return Validator::make($data, array_merge([
             'name' => 'required|string|max:255',
@@ -61,7 +61,7 @@ class ShippingAddressValidator
         ], $rules));
     }
 
-    public static function verify(array $address, bool $delivery = false): Collection
+    public static function verify(array $address, bool $zip4 = false): Collection
     {
 
         if (array_key_exists('line1', $address)) {
@@ -95,10 +95,10 @@ class ShippingAddressValidator
 
         $response = (new EasyPost)->addressCreate($addressData);
 
-        if ($delivery) {
-            $verificationErrors = collect($response->verifications->delivery->errors ?? []);
-        } else {
+        if ($zip4) {
             $verificationErrors = collect($response->verifications->zip4->errors ?? []);
+        } else {
+            $verificationErrors = collect($response->verifications->delivery->errors ?? []);
         }
 
         return
