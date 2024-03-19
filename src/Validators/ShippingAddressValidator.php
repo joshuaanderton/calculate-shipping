@@ -64,7 +64,6 @@ class ShippingAddressValidator
     public static function verify(array $address, bool $delivery = false): Collection
     {
 
-
         if (array_key_exists('line1', $address)) {
             $address['street1'] = $address['line1'];
             $address['street2'] = $address['line2'];

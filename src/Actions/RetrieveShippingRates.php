@@ -2,8 +2,6 @@
 
 namespace Ja\Shipping\Actions;
 
-use EasyPost\EasyPostClient;
-use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Ja\Shipping\Services\EasyPost;

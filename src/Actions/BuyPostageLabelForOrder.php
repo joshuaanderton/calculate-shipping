@@ -2,7 +2,6 @@
 
 namespace Ja\Shipping\Actions;
 
-use EasyPost\EasyPostClient;
 use Ja\Shipping\Services\EasyPost;
 
 class BuyPostageLabelForOrder
