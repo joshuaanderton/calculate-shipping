@@ -3,6 +3,10 @@
 namespace Ja\Shipping\Services;
 
 use EasyPost\EasyPostClient;
+use EasyPost\Exception\General\EasyPostException;
+use Exception;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class EasyPost
 {
@@ -65,10 +69,22 @@ class EasyPost
             ]);
         }
 
-        return $this->client->order->create([
-            'from_address' => $fromAddress,
-            'to_address' => $toAddress,
-            'shipments' => collect($parcels)->map(fn ($parcel) => ['parcel' => $parcel])->toArray(),
-        ]);
+        try {
+            $order = $this->client->order->create([
+                'from_address' => $fromAddress,
+                'to_address' => $toAddress,
+                'shipments' => collect($parcels)->map(fn ($parcel) => ['parcel' => $parcel])->toArray(),
+            ]);
+        } catch (EasyPostException $e) {
+            $errors = collect($e->errors);
+
+            if ($errors->count() > 0) {
+                throw new Exception($errors->first()['field'].': '.$errors->first()['message']);
+            }
+
+            throw $e;
+        }
+
+        return $order;
     }
 }
