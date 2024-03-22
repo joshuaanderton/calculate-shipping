@@ -59,32 +59,12 @@ class EasyPost
         ]);
     }
 
-    public function orderOrShipmentCreate(array $fromAddress, array $toAddress, array $parcels): mixed
+    public function shipmentCreate(array $fromAddress, array $toAddress, array $parcel): mixed
     {
-        if (count($parcels) === 1) {
-            return $this->client->shipment->create([
-                'from_address' => $fromAddress,
-                'to_address' => $toAddress,
-                'parcel' => $parcels[0],
-            ]);
-        }
-
-        try {
-            $order = $this->client->order->create([
-                'from_address' => $fromAddress,
-                'to_address' => $toAddress,
-                'shipments' => collect($parcels)->map(fn ($parcel) => ['parcel' => $parcel])->toArray(),
-            ]);
-        } catch (EasyPostException $e) {
-            $errors = collect($e->errors);
-
-            if ($errors->count() > 0) {
-                throw new Exception($errors->first()['field'].': '.$errors->first()['message']);
-            }
-
-            throw $e;
-        }
-
-        return $order;
+        return $this->client->shipment->create([
+            'from_address' => $fromAddress,
+            'to_address' => $toAddress,
+            'parcel' => $parcel,
+        ]);
     }
 }
