@@ -10,13 +10,13 @@ use Ja\Shipping\Services\EasyPost;
  */
 class CreateShipment
 {
-    public static function run(array $fromAddress, array $toAddress, array $parcel, ?string $currency = null): Shipment
+    public static function run(array $fromAddress, array $toAddress, array $parcel, ?array $carrierAccounts = null): Shipment
     {
         return (new EasyPost)->shipmentCreate(
             $fromAddress,
             $toAddress,
             $parcel,
-            $currency
+            $carrierAccounts
         );
     }
 }
