@@ -5,6 +5,9 @@ namespace Ja\Shipping\Actions;
 use Illuminate\Support\Facades\App;
 use Ja\Shipping\Services\EasyPost;
 
+/**
+ * Create a tracking object using configured shipping service
+ */
 class CreateTracking
 {
     public static function run(string $trackingCode, string $carrier): array

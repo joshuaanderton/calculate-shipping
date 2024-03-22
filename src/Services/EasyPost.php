@@ -59,12 +59,13 @@ class EasyPost
         ]);
     }
 
-    public function shipmentCreate(array $fromAddress, array $toAddress, array $parcel): mixed
+    public function shipmentCreate(array $fromAddress, array $toAddress, array $parcel, string $currency): mixed
     {
         return $this->client->shipment->create([
             'from_address' => $fromAddress,
             'to_address' => $toAddress,
             'parcel' => $parcel,
+            // 'carrier_accounts' => ['canada_post'],
         ]);
     }
 }
