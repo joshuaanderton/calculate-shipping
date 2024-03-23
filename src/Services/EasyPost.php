@@ -59,12 +59,25 @@ class EasyPost
         ]);
     }
 
-    public function shipmentCreate(array $fromAddress, array $toAddress, array $parcel, ?array $carrierAccounts = null): mixed
-    {
-        return $this->client->shipment->create(array_merge([
-            'from_address' => $fromAddress,
-            'to_address' => $toAddress,
-            'parcel' => $parcel,
-        ], $carrierAccounts ? ['carrier_accounts' => $carrierAccounts] : []));
+    public function shipmentCreate(
+        array $fromAddress,
+        array $toAddress,
+        array $parcel,
+        ?array $carrierAccounts = null,
+        ?array $options = null
+    ): mixed {
+        return $this->client->shipment->create(array_merge(
+                [
+                    'from_address' => $fromAddress,
+                    'to_address' => $toAddress,
+                    'parcel' => $parcel,
+                ],
+                $carrierAccounts == null ? [] : [
+                    'carrier_accounts' => $carrierAccounts
+                ],
+                $options == null ? [] : [
+                    'options' => $options
+                ],
+        ));
     }
 }
