@@ -29,10 +29,19 @@ class EasyPost
         return $this->client->address->create($address);
     }
 
-    public function rateRetrieve(string $shippingRateId): mixed
+    public function rateRetrieve(string $rateId): mixed
     {
-        return $this->client->rate->retrieve($shippingRateId);
+        return $this->client->rate->retrieve($rateId);
     }
+
+    // public function batchShipmentCreate(array $data)
+    // {
+    //     $batch = $this->client->batch->create([
+    //         'reference' => 'batch_shipment',
+    //     ]);
+
+    //     return $batch;
+    // }
 
     public function orderBuy(string $orderId, string $rateId): mixed
     {
@@ -41,9 +50,9 @@ class EasyPost
         return $this->client->order->buy($orderId, $rate);
     }
 
-    public function shipmentBuy(string $shipmentId, string $shippingRateId, ?bool $insurance = null): mixed
+    public function shipmentBuy(string $shipmentId, string $rateId, ?bool $insurance = null): mixed
     {
-        $rate = $this->rateRetrieve($shippingRateId);
+        $rate = $this->rateRetrieve($rateId);
 
         return $this->client->shipment->buy($shipmentId, [
             'rate' => $rate,
@@ -57,6 +66,11 @@ class EasyPost
             'tracking_code' => $trackingCode,
             'carrier' => $carrier,
         ]);
+    }
+
+    public function shipmentRetrieve(string $shipmentId): mixed
+    {
+        return $this->client->shipment->retrieve($shipmentId);
     }
 
     public function shipmentCreate(

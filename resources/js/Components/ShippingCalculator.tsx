@@ -19,10 +19,10 @@ interface ShippingDimensions {
 }
 
 interface Props {
-  onError: (errors: {[field: string]: string|string[]}) => void
   dimensions: ShippingDimensions
   fees: {label: string, amount: number}[]
   currency?: string
+  onError?: (errors: {[field: string]: string|string[]}) => void
 }
 
 interface ShippingRate {
@@ -42,7 +42,7 @@ interface Shipment {
 
 const countries = { CA: 'Canada', US: 'United States' }
 
-const ShippingCalculator: React.FC<Props> = ({ onError, dimensions, fees = [], currency = 'CAD' }) => {
+const ShippingCalculator: React.FC<Props> = ({ dimensions, fees = [], currency = 'CAD', onError }) => {
 
   const [postalCode, setPostalCode] = useState<string|null>(null),
         [country, setCountry] = useState<string|null>(null)
@@ -92,7 +92,7 @@ const ShippingCalculator: React.FC<Props> = ({ onError, dimensions, fees = [], c
 
     if (Object.values(errors).length === 0) return
 
-    onError(errors)
+    onError?.(errors)
 
   }, [errors])
 

@@ -9,9 +9,9 @@ use Ja\Shipping\Services\EasyPost;
  */
 class BuyPostageLabelForShipment
 {
-    public static function run(string $shipmentId, string $shippingRateId): ?array
+    public static function run(string $shipmentId, string $rateId): ?array
     {
-        $result = (new EasyPost)->shipmentBuy($shipmentId, $shippingRateId);
+        $result = (new EasyPost)->shipmentBuy($shipmentId, $rateId);
 
         return $result ?? null;
     }

@@ -44,7 +44,8 @@ class Store
 
     public function handle(User $user, string $zip, string $country, array $dimensions, string $currency)
     {
-        $address = $user->currentTeam->shop->shippingFromAddress;
+        $shop = $user->currentTeam->shop;
+        $address = $shop->shippingFromAddress;
         $addressAttributes = explode('|', 'street1|street2|city|state|zip|country|phone');
 
         $fromAddress = (
@@ -79,7 +80,14 @@ class Store
             toAddress: $toAddress,
             parcel: $parcel->toArray(),
             carrierAccounts: Carrier::whereOrigin($fromAddress['country'])->pluck('id')->toArray(),
-            options: ['currency' => $currency]
+            options: [
+                'currency' => $currency,
+                'payment' => [
+                    'type' => 'RECEIVER',
+                    'account' => $shop->id,
+                    'postal_code' => $toAddress['zip'],
+                ]
+            ]
         );
 
         $errors = (
