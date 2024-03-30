@@ -115,7 +115,7 @@ class Store
         $rates = collect($shipment->rates)
             ->map(fn ($rate) => [
                 ...$rate->__toArray(),
-                'rate_int' => (int) ((float) $rate->rate) * 100
+                'rate_int' => cents($rate->rate)
             ])
             ->sortBy('rate_int')
             ->values()
